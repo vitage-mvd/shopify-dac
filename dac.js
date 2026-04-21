@@ -40,9 +40,17 @@ const DAC_WS_GET_PEGOTE = `${DAC_WS}wsGetPegote`;
  */
 async function loginToDAC() {
   try {
+    const start = Date.now();
+    logger.info("[dac.login] Requesting DAC session");
     const response = await axios.get(DAC_WS_LOGIN_URL, {
       params: { Login: DAC_USER_ID, Contrasenia: DAC_USER_PASS },
     });
+    logger.info(
+      `[dac.login] Response received ${JSON.stringify({
+        elapsedMs: Date.now() - start,
+        result: response?.data?.result,
+      })}`
+    );
 
     const { data } = response;
 
@@ -53,7 +61,13 @@ async function loginToDAC() {
     }
     return false;
   } catch (error) {
-    logger.error(`Error en wsLogin(): ${error.message}`);
+    logger.error(
+      `[dac.login] Error ${JSON.stringify({
+        message: error.message,
+        status: error?.response?.status,
+        data: error?.response?.data,
+      })}`
+    );
     throw error;
   }
 }
@@ -161,11 +175,24 @@ async function wsInGuia_Levante(dacSessionId, shopifyPayload) {
 
     // logger.info(`#1. inGuiaLevanteParams: ${JSON.stringify(inGuiaLevanteParams, null, 2)}`);
 
-    logger.info(`DAC_WS_IN_GUIA_LEVANTE URL: ${DAC_WS_IN_GUIA_LEVANTE}`);
+    logger.info(
+      `[dac.wsInGuia_Levante] Request ${JSON.stringify({
+        orderId: shopifyPayload?.id,
+        hasSessionId: Boolean(dacSessionId),
+      })}`
+    );
 
+    const start = Date.now();
     const response = await axios.get(DAC_WS_IN_GUIA_LEVANTE, {
       params: inGuiaLevanteParams,
     });
+    logger.info(
+      `[dac.wsInGuia_Levante] Response ${JSON.stringify({
+        orderId: shopifyPayload?.id,
+        elapsedMs: Date.now() - start,
+        result: response?.data?.result,
+      })}`
+    );
 
     const wsInGuiaResponseData = util.inspect(response.data, { depth: null });
     logger.info(
@@ -200,7 +227,14 @@ async function wsInGuia_Levante(dacSessionId, shopifyPayload) {
 
     return { ok: false, response: response };
   } catch (error) {
-    logger.error(`#4. Error en wsInGuia_Levante(): ${error.message}`);
+    logger.error(
+      `[dac.wsInGuia_Levante] Error ${JSON.stringify({
+        orderId: shopifyPayload?.id,
+        message: error.message,
+        status: error?.response?.status,
+        data: error?.response?.data,
+      })}`
+    );
     throw error;
   }
 }
@@ -208,9 +242,22 @@ async function wsInGuia_Levante(dacSessionId, shopifyPayload) {
 async function wsGetpegote(pegoteParams) {
   let pegoteResponse = false;
   try {
+    logger.info(
+      `[dac.wsGetpegote] Request ${JSON.stringify({
+        kOficina: pegoteParams?.K_Oficina,
+        kGuia: pegoteParams?.K_Guia,
+      })}`
+    );
+    const start = Date.now();
     pegoteResponse = await axios.get(DAC_WS_GET_PEGOTE, {
       params: pegoteParams,
     });
+    logger.info(
+      `[dac.wsGetpegote] Response ${JSON.stringify({
+        elapsedMs: Date.now() - start,
+        result: pegoteResponse?.data?.result,
+      })}`
+    );
 
     const resultOk = pegoteResponse.data.result === 0;
 
@@ -239,7 +286,13 @@ async function wsGetpegote(pegoteParams) {
 
     return pegoteResponse;
   } catch (error) {
-    logger.error(`Error en wsGetpegote(): ${error.message}`);
+    logger.error(
+      `[dac.wsGetpegote] Error ${JSON.stringify({
+        message: error.message,
+        status: error?.response?.status,
+        data: error?.response?.data,
+      })}`
+    );
     throw error;
   }
 }
