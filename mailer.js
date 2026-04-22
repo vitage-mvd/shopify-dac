@@ -6,6 +6,17 @@ const { logger } = require("./logger");
 const VITAGE_EMAIL = process.env.VITAGE_EMAIL;
 const VITAGE_APP_PASS = process.env.VITAGE_APP_PASS;
 
+const transporter = nodemailer.createTransport({
+  service: "Gmail",
+  host: "smtp.gmail.com",
+  port: 465,
+  secure: true,
+  auth: {
+    user: VITAGE_EMAIL,
+    pass: VITAGE_APP_PASS,
+  },
+});
+
 // -----------------------------------------------------------------------------
 // sendEmail
 // -----------------------------------------------------------------------------
@@ -19,18 +30,6 @@ const VITAGE_APP_PASS = process.env.VITAGE_APP_PASS;
  */
 const sendEmail = async (to, copyTo, subject, message, attachmentPath) => {
   try {
-    // Configurar transporte de Nodemailer
-    const transporter = nodemailer.createTransport({
-      service: "Gmail",
-      host: "smtp.gmail.com",
-      port: 465,
-      secure: true,
-      auth: {
-        user: VITAGE_EMAIL,
-        pass: VITAGE_APP_PASS,
-      },
-    });
-
     // Opciones del correo
     const mailOptions = {
       from: VITAGE_EMAIL,
