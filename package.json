@@ -12,7 +12,7 @@
     "body-parser": "^1.20.2",
     "express": "^4.18.2",
     "node-cache": "^5.1.2",
-    "nodemailer": "^6.9.16",
+    "nodemailer": "^8.0.5",
     "winston": "^3.17.0",
     "winston-transport": "^4.9.0"
   },
