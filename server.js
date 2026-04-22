@@ -4,7 +4,7 @@ const app = express();
 const NodeCache = require("node-cache");
 const util = require("util");
 
-const PRODUCCION_ACTIVADO = process.env.ENTORNO === "PRODUCCION" ? true : false;
+const PRODUCCION_ACTIVADO = process.env.ENTORNO === "PRODUCCION";
 
 const PORT = process.env.PORT || 3000;
 const APP_VERSION = process.env.APP_VERSION || "2026-04-22-debug-v1";
