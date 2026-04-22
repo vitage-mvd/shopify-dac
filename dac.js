@@ -27,6 +27,12 @@ const DAC_WS_LOGOUT_URL = `${DAC_WS}wsLogOut`;
 const DAC_WS_IN_GUIA_LEVANTE = `${DAC_WS}wsInGuia_Levante`;
 const DAC_WS_GET_PEGOTE = `${DAC_WS}wsGetPegote`;
 
+const maskSessionId = (sessionId) => {
+  if (!sessionId || typeof sessionId !== "string") return "n/a";
+  if (sessionId.length <= 12) return "***";
+  return `${sessionId.slice(0, 6)}...${sessionId.slice(-6)}`;
+};
+
 // -----------------------------------------------------------------------------
 // loginToDAC
 // -----------------------------------------------------------------------------
@@ -56,7 +62,11 @@ async function loginToDAC() {
 
     if (data.result === 0 && data.data.length > 0) {
       const dacSessionId = data.data[0].ID_Session;
-      logger.info(`Éxito en wsLogin(). Session ID: ${dacSessionId}`);
+      logger.info(
+        `[dac.login] Session created ${JSON.stringify({
+          sessionIdMasked: maskSessionId(dacSessionId),
+        })}`
+      );
       return dacSessionId;
     }
     logger.warn(

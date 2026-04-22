@@ -132,7 +132,9 @@ app.post("/webhook", async (req, res) => {
       );
 
       if (!wsInGuia_Levante_Response.ok) {
-        logger.warn(`[workflow] Session retry required ${JSON.stringify(eventContext)}`);
+        logger.info(
+          `[workflow] Session retry required ${JSON.stringify(eventContext)}`
+        );
         dacSessionId = await loginToDAC();
         if (dacSessionId) {
           logger.info(
