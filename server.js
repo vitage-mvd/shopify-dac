@@ -20,7 +20,6 @@ const {
   generateClientTableInfo,
   enviarLogsPorCorreo,
   enviarEmailACliente,
-  apiResponse,
 } = require("./helpers");
 
 if (!PRODUCCION_ACTIVADO) {
