@@ -39,12 +39,9 @@ const enviarLogsPorCorreo = (
   );
   const logs = memoryTransport.getLogs();
 
-  // Construct the email message with log details.
-  let mensajeCorreo = `<strong>📝 Detalle de los eventos</strong>: <br><div style="font-family: 'Courier New', Courier, monospace;">`;
-  mensajeCorreo += logs
-    .map((log) => `[${log.level}] ${log.message}`)
-    .join("<br>");
-  mensajeCorreo += "</div>";
+  // Construct the email without detailed logs.
+  let mensajeCorreo =
+    "<p><strong>Resumen del proceso</strong>: se omitió el detalle de logs en este correo. Revisar Render para debugging.</p>";
 
   // Clear logs after reading them.
   memoryTransport.clearLogs();
