@@ -290,7 +290,15 @@ async function wsGetpegote(pegoteParams) {
           pdf: etiquetaPath,
         };
       } catch (error) {
-        logger.error(`Error procesando PDF de etiqueta (wsGetPegote)`, error);
+        logger.error(
+          `[dac.wsGetpegote] Error procesando PDF ${JSON.stringify({
+            message: error.message,
+          })}`
+        );
+        return {
+          resultOk: false,
+          pdf: null,
+        };
       }
     } else {
       logger.error(`Resultado fallido de wsGetPegote`);
@@ -300,7 +308,6 @@ async function wsGetpegote(pegoteParams) {
       };
     }
 
-    return pegoteResponse;
   } catch (error) {
     logger.error(
       `[dac.wsGetpegote] Error ${JSON.stringify({
