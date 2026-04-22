@@ -23,14 +23,14 @@ const {
 } = require("./helpers");
 
 if (!PRODUCCION_ACTIVADO) {
-  // console log del momento para validar que el commit llegó.
+  // Log del momento para validar que el commit llegó.
   const ahora = new Date();
   const horas = ahora.getHours().toString().padStart(2, "0");
   const minutos = ahora.getMinutes().toString().padStart(2, "0");
-  console.log(`Time: ${horas}:${minutos}`);
+  logger.info(`[startup] Time: ${horas}:${minutos}`);
 }
 
-console.log(`Running on environment: ${process.env.ENTORNO}`);
+logger.info(`[startup] Running on environment: ${process.env.ENTORNO}`);
 logger.info(
   `[startup] Webhook service booted ${JSON.stringify({
     environment: process.env.ENTORNO,
