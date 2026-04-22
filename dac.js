@@ -59,6 +59,12 @@ async function loginToDAC() {
       logger.info(`Éxito en wsLogin(). Session ID: ${dacSessionId}`);
       return dacSessionId;
     }
+    logger.warn(
+      `[dac.login] DAC rejected login ${JSON.stringify({
+        result: data?.result,
+        data: data?.data,
+      })}`
+    );
     return false;
   } catch (error) {
     logger.error(

@@ -7,6 +7,7 @@ const util = require("util");
 const PRODUCCION_ACTIVADO = process.env.ENTORNO === "PRODUCCION" ? true : false;
 
 const PORT = process.env.PORT || 3000;
+const APP_VERSION = process.env.APP_VERSION || "2026-04-22-debug-v1";
 const eventCache = new NodeCache({
   stdTTL: 300,
   checkperiod: 60,
@@ -36,6 +37,7 @@ logger.info(
     environment: process.env.ENTORNO,
     production: PRODUCCION_ACTIVADO,
     port: PORT,
+    appVersion: APP_VERSION,
   })}`
 );
 
@@ -206,5 +208,10 @@ app.post("/webhook", async (req, res) => {
 
 // Start the server
 app.listen(PORT, () => {
-  logger.info(`[startup] Server listening on port ${PORT}`);
+  logger.info(
+    `[startup] Server listening ${JSON.stringify({
+      port: PORT,
+      appVersion: APP_VERSION,
+    })}`
+  );
 });

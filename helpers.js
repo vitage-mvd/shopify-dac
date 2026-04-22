@@ -29,7 +29,14 @@ const enviarLogsPorCorreo = (
   getPegoteResponse,
   produccionActivado
 ) => {
-  console.log("produccionActivado en enviarLogsPorCorreo", produccionActivado);
+  logger.info(
+    `[email.logs] Preparing summary email ${JSON.stringify({
+      produccionActivado,
+      hasDatosCliente: Boolean(datosCliente),
+      hasTablaDatosCliente: Boolean(tablaDatosCliente),
+      hasCodigoRastreo: Boolean(codigoRastreo),
+    })}`
+  );
   const logs = memoryTransport.getLogs();
 
   // Construct the email message with log details.
@@ -47,7 +54,10 @@ const enviarLogsPorCorreo = (
   const contieneWarnings = logs.some((log) => log.level === "warn");
 
   let asunto;
-  const asuntoDetail = `${codigoRastreo} - ${datosCliente["Nombre Completo"]}`;
+  const nombreCompleto =
+    (datosCliente && datosCliente["Nombre Completo"]) || "Cliente no disponible";
+  const codigoRastreoSafe = codigoRastreo || "Sin código de rastreo";
+  const asuntoDetail = `${codigoRastreoSafe} - ${nombreCompleto}`;
 
   if (produccionActivado) {
     asunto = `Proceso exitoso: ${asuntoDetail}`;
@@ -62,7 +72,9 @@ const enviarLogsPorCorreo = (
   }
 
   // Append additional information to the email message.
-  mensajeCorreo += tablaDatosCliente;
+  mensajeCorreo +=
+    tablaDatosCliente ||
+    "<p><em>No se pudo generar la tabla del cliente para este evento.</em></p>";
 
   // Send the email and log the result.
   sendEmail(EMAIL_VITAGE, EMAIL_DEV, asunto, mensajeCorreo, getPegoteResponse)
