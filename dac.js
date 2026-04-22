@@ -282,12 +282,12 @@ async function wsGetpegote(pegoteParams) {
         const pegoteResponseData = pegoteResponse.data.data;
         const base64_pegote_PDF = pegoteResponseData.Pegote;
         const pegote_buffer = Buffer.from(base64_pegote_PDF, "base64");
-        const pegote_pdf = fs.writeFileSync("etiqueta.pdf", pegote_buffer);
-        // console.log("pegote_pdf", pegote_pdf);
+        const etiquetaPath = "etiqueta.pdf";
+        fs.writeFileSync(etiquetaPath, pegote_buffer);
         logger.info(`Éxito creando etiqueta (wsGetPegote)`);
         return {
           resultOk: true,
-          pdf: pegote_pdf,
+          pdf: etiquetaPath,
         };
       } catch (error) {
         logger.error(`Error procesando PDF de etiqueta (wsGetPegote)`, error);

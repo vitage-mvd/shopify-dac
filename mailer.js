@@ -1,4 +1,7 @@
 const nodemailer = require("nodemailer");
+const fs = require("fs");
+const path = require("path");
+const { logger } = require("./logger");
 
 const VITAGE_EMAIL = process.env.VITAGE_EMAIL;
 const VITAGE_APP_PASS = process.env.VITAGE_APP_PASS;
@@ -14,8 +17,7 @@ const VITAGE_APP_PASS = process.env.VITAGE_APP_PASS;
  * @param {string} message - Contenido en HTML del correo.
  * @returns {Promise<Object>} - Resultado del envío del correo.
  */
-const sendEmail = async (to, copyTo, subject, message, file) => {
-  
+const sendEmail = async (to, copyTo, subject, message, attachmentPath) => {
   try {
     // Configurar transporte de Nodemailer
     const transporter = nodemailer.createTransport({
@@ -36,20 +38,33 @@ const sendEmail = async (to, copyTo, subject, message, file) => {
       bcc: copyTo || "", // Añadir copia oculta si está definida
       subject,
       html: message,
-      attachments: file
-      ? [
-          {
-            filename: "etiqueta.pdf",
-            path: "etiqueta.pdf",
-          },
-        ]
-      : [],
+      attachments:
+        attachmentPath && fs.existsSync(attachmentPath)
+          ? [
+              {
+                filename: path.basename(attachmentPath),
+                path: attachmentPath,
+              },
+            ]
+          : [],
     };
+
+    if (attachmentPath && !fs.existsSync(attachmentPath)) {
+      logger.warn(
+        `[mailer] Attachment file not found ${JSON.stringify({
+          attachmentPath,
+        })}`
+      );
+    }
 
     // Enviar el correo
     return await transporter.sendMail(mailOptions);
   } catch (error) {
-    console.error("Error al enviar el correo:", error.message);
+    logger.error(
+      `[mailer] Error al enviar el correo ${JSON.stringify({
+        message: error.message,
+      })}`
+    );
     throw error;
   }
 };

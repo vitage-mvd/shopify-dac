@@ -88,8 +88,12 @@ const enviarLogsPorCorreo = (
     tablaDatosCliente ||
     "<p><em>No se pudo generar la tabla del cliente para este evento.</em></p>";
 
+  const etiquetaAdjuntaPath = getPegoteResponse?.resultOk
+    ? getPegoteResponse?.pdf
+    : null;
+
   // Send the email and log the result.
-  sendEmail(EMAIL_VITAGE, EMAIL_DEV, asunto, mensajeCorreo, getPegoteResponse)
+  sendEmail(EMAIL_VITAGE, EMAIL_DEV, asunto, mensajeCorreo, etiquetaAdjuntaPath)
     .then(() => logger.info("Correo enviado exitosamente con los logs."))
     .catch((error) => logger.info("Error al enviar el correo:", error.message));
 };
