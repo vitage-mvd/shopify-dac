@@ -65,20 +65,6 @@ app.post("/webhook", async (req, res) => {
   };
   logger.info(`[webhook] Received ${JSON.stringify(eventContext)}`);
 
-  // Check if the order is for local pickup
-  const isLocalPickup = webhookData.shipping_address === null;
-
-  if (isLocalPickup) {
-    logger.info(
-      `[webhook] Ignored local pickup order ${JSON.stringify(eventContext)}`
-    );
-    // Ignore local pickup orders
-    return res.status(200).send("Ignored local pickup order");
-  }
-
-  let infoParaEmail = {};
-  let getPegoteResponse;
-
   const hmacHeader = req.get("X-Shopify-Hmac-Sha256");
   const generatedHmac = crypto
     .createHmac("sha256", process.env.SHOPIFY_SECRET)
@@ -94,6 +80,20 @@ app.post("/webhook", async (req, res) => {
     );
     return res.status(401).send("Unauthorized"); // Ensures exit on failure
   }
+
+  // Check if the order is for local pickup
+  const isLocalPickup = webhookData.shipping_address === null;
+
+  if (isLocalPickup) {
+    logger.info(
+      `[webhook] Ignored local pickup order ${JSON.stringify(eventContext)}`
+    );
+    // Ignore local pickup orders
+    return res.status(200).send("Ignored local pickup order");
+  }
+
+  let infoParaEmail = {};
+  let getPegoteResponse;
 
   if (eventCache.has(eventId)) {
     logger.info(
