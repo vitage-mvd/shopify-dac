@@ -52,6 +52,12 @@ const enviarLogsPorCorreo = (
   // Determine if there are any errors or warnings in the logs.
   const contieneErrores = logs.some((log) => log.level === "error");
   const contieneWarnings = logs.some((log) => log.level === "warn");
+  const huboReintentoSesion = logs.some(
+    (log) =>
+      log.level === "info" &&
+      typeof log.message === "string" &&
+      log.message.includes("[workflow] Session retry required")
+  );
 
   let asunto;
   const nombreCompleto =
@@ -63,6 +69,12 @@ const enviarLogsPorCorreo = (
     asunto = `Proceso exitoso: ${asuntoDetail}`;
   } else {
     asunto = `[TESTING] Proceso exitoso: ${asuntoDetail}`;
+  }
+
+  if (huboReintentoSesion) {
+    asunto = produccionActivado
+      ? `Proceso exitoso con reintento de sesión: ${asuntoDetail}`
+      : `[TESTING] Proceso exitoso con reintento de sesión: ${asuntoDetail}`;
   }
 
   if (contieneErrores) {
