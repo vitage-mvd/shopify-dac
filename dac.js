@@ -23,7 +23,6 @@ if (PRODUCCION_ACTIVADO) {
 }
 
 const DAC_WS_LOGIN_URL = `${DAC_WS}wsLogin`;
-const DAC_WS_LOGOUT_URL = `${DAC_WS}wsLogOut`;
 const DAC_WS_IN_GUIA_LEVANTE = `${DAC_WS}wsInGuia_Levante`;
 const DAC_WS_GET_PEGOTE = `${DAC_WS}wsGetPegote`;
 
@@ -84,50 +83,6 @@ async function loginToDAC() {
         data: error?.response?.data,
       })}`
     );
-    throw error;
-  }
-}
-
-// -----------------------------------------------------------------------------
-// logOutFromDAC
-// -----------------------------------------------------------------------------
-/**
- * Logs out from DAC.
- *
- * This function logs out from DAC by sending an HTTP GET request to the logout endpoint
- * with the provided session ID. It logs a success message if the logout is successful;
- * otherwise, it logs an error and throws an exception.
- *
- * @param {string} dacSessionId - The session ID obtained from wsLogin.
- * @throws Will throw an error if the logout fails.
- */
-async function logOutFromDAC(dacSessionId) {
-  try {
-    const response = await axios.get(DAC_WS_LOGOUT_URL, {
-      params: { ID_Sesion: dacSessionId },
-    });
-
-    const { data } = response;
-    if (data.result === 0) {
-      logger.info(
-        `logOutFromDAC() -> DAC Logout successful: ${JSON.stringify(
-          data.data,
-          null,
-          2
-        )}`
-      );
-    } else {
-      logger.error(
-        `logOutFromDAC() -> DAC Logout failed: ${JSON.stringify(
-          data.data,
-          null,
-          2
-        )}`
-      );
-      throw new Error("Invalid session ID or already closed.");
-    }
-  } catch (error) {
-    logger.error(`Error during DAC logout: ${error.message}`);
     throw error;
   }
 }
@@ -325,7 +280,6 @@ async function wsGetpegote(pegoteParams) {
 // -----------------------------------------------------------------------------
 module.exports = {
   loginToDAC,
-  logOutFromDAC,
   wsInGuia_Levante,
   wsGetpegote,
 };
