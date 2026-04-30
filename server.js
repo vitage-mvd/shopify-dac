@@ -6,7 +6,10 @@ const util = require("util");
 
 /** Bump this when you deploy to confirm Render is running this revision. */
 const DEPLOY_MARKER = 1;
-console.log(`[Beginning process] marker=${DEPLOY_MARKER}`);
+const bootBanner = `\n\n${"═".repeat(56)}
+  🚀 APP BOOT — [Beginning process]  marker=${DEPLOY_MARKER}
+${"═".repeat(56)}\n`;
+console.log(bootBanner);
 
 const PRODUCCION_ACTIVADO = process.env.ENTORNO === "PRODUCCION";
 
@@ -115,7 +118,9 @@ app.post("/webhook", async (req, res) => {
   // Continue processing in the background
   setImmediate(async () => {
     try {
-      logger.info(`[workflow] Processing started ${JSON.stringify(eventContext)}`);
+      logger.info(
+        `\n\n${"─".repeat(56)}\n▶️  [workflow] RUN START — order processing\n${"─".repeat(56)}\n${JSON.stringify(eventContext)}\n${"─".repeat(56)}\n`
+      );
       let dacSessionId = process.env.DAC_SESSION_ID;
       logger.info(
         `[workflow] Calling wsInGuia_Levante ${JSON.stringify({
@@ -199,7 +204,12 @@ app.post("/webhook", async (req, res) => {
         })}`
       );
     } finally {
-      logger.info(`[workflow] Sending summary logs by email ${JSON.stringify(eventContext)}`);
+      logger.info(
+        `\n${"─".repeat(56)}\n🏁 [workflow] RUN END — finished (summary email next)\n${"─".repeat(56)}\n${JSON.stringify(eventContext)}\n${"─".repeat(56)}\n\n`
+      );
+      logger.info(
+        `[workflow] Sending summary logs by email ${JSON.stringify(eventContext)}`
+      );
       void enviarLogsPorCorreo(
         infoParaEmail.tablaDatosCliente,
         infoParaEmail.codigoRastreo,
