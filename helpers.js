@@ -122,10 +122,17 @@ const enviarEmailACliente = (info) => {
 
 <h3>📌 Información sobre la entrega:</h3>
 <p>
-  🚚 <strong>Plazo de entrega:</strong> DAC realiza entregas en 24 - 48 horas
-  hábiles dentro del horario de 9:00 a 20:00. <br />
-  📍 <strong>Si no te encuentran en el domicilio:</strong> tu paquete quedará
-  disponible para retiro en la sucursal DAC más cercana.<br />
+  🚚 <strong>Disponemos 3 días para despacho de envíos:</strong> martes, jueves
+  y viernes.<br />
+  ✅ Haz el seguimiento con el número de rastreo.<br />
+  ✅ Una vez ingresado el pedido la entrega puede ser entre las 48 y 72
+  horas.<br />
+  <br />
+  <strong>*</strong> Para pedidos que quieren ser retirados el mismo día de la
+  compra: solicitar retiro en pickup de Cordón (Montevideo) o Salinas
+  (Canelones).<br />
+  <strong>*</strong> Los pedidos para envío que se hagan el viernes de noche,
+  sábado, domingo y lunes, serán despachados el martes.<br />
   📞 <strong>Para consultas:</strong> podés comunicarte con DAC al
   <strong>1717</strong> con tu número de rastreo en mano.
 </p>

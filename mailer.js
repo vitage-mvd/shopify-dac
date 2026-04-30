@@ -30,6 +30,26 @@ const transporter = nodemailer.createTransport({
  */
 const sendEmail = async (to, copyTo, subject, message, attachmentPath) => {
   try {
+    const toDomain = (to || "").includes("@")
+      ? (to || "").split("@").pop()
+      : null;
+    console.log(
+      "[MAIL_PROOF] send_attempt",
+      JSON.stringify({
+        smtpHost: "smtp.gmail.com",
+        smtpPort: 465,
+        secure: true,
+        hasFrom: Boolean(VITAGE_EMAIL),
+        hasAuth: Boolean(VITAGE_APP_PASS),
+        toDomain,
+        hasBcc: Boolean(copyTo),
+        subjectLength: (subject || "").length,
+        hasAttachment: Boolean(
+          attachmentPath && fs.existsSync(attachmentPath)
+        ),
+      })
+    );
+
     // Opciones del correo
     const mailOptions = {
       from: VITAGE_EMAIL,
@@ -56,14 +76,27 @@ const sendEmail = async (to, copyTo, subject, message, attachmentPath) => {
       );
     }
 
-    // Enviar el correo
-    return await transporter.sendMail(mailOptions);
+    const sendStarted = Date.now();
+    const result = await transporter.sendMail(mailOptions);
+    const okPayload = {
+      elapsedMs: Date.now() - sendStarted,
+      messageId: result?.messageId || null,
+      response: result?.response || null,
+    };
+    logger.info(`[mailer] Sent OK ${JSON.stringify(okPayload)}`);
+    console.log("[MAIL_PROOF] send_ok", JSON.stringify(okPayload));
+    return result;
   } catch (error) {
+    const errPayload = {
+      message: error.message,
+      code: error.code || null,
+      command: error.command || null,
+      responseCode: error.responseCode || null,
+    };
     logger.error(
-      `[mailer] Error al enviar el correo ${JSON.stringify({
-        message: error.message,
-      })}`
+      `[mailer] Error al enviar el correo ${JSON.stringify(errPayload)}`
     );
+    console.log("[MAIL_PROOF] send_failed", JSON.stringify(errPayload));
     throw error;
   }
 };
