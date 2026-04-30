@@ -149,6 +149,8 @@ app.post("/webhook", async (req, res) => {
             `[workflow] DAC session renewed ${JSON.stringify(eventContext)}`
           );
           setEnvValue("DAC_SESSION_ID", dacSessionId);
+          // Render (and Node) keep startup env in memory; sync so later webhooks reuse this session.
+          process.env.DAC_SESSION_ID = dacSessionId;
           wsInGuia_Levante_Response = await wsInGuia_Levante(
             dacSessionId,
             webhookData
