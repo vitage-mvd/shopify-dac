@@ -4,6 +4,10 @@ const app = express();
 const NodeCache = require("node-cache");
 const util = require("util");
 
+/** Bump this when you deploy to confirm Render is running this revision. */
+const DEPLOY_MARKER = 1;
+console.log(`[Beginning process] marker=${DEPLOY_MARKER}`);
+
 const PRODUCCION_ACTIVADO = process.env.ENTORNO === "PRODUCCION";
 
 const PORT = process.env.PORT || 3000;
